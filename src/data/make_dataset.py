@@ -48,6 +48,7 @@ def main(input_filepath, output_filepath):
     labels_train, labels_test = labels_train.type(torch.LongTensor), labels_test.type(torch.LongTensor)
     images_train, images_test= images_train.type(torch.FloatTensor), images_test.type(torch.FloatTensor)
     #saving the processsed tensors
+    #saving both the training and test sets
     torch.save(images_train, output_filepath + '/images_train.pt')
     torch.save(labels_train, output_filepath + '/labels_train.pt')
     torch.save(images_test, output_filepath + '/images_test.pt')
