@@ -18,18 +18,15 @@ from torch.utils.data import TensorDataset, DataLoader
 import hydra
 from variable import PROJECT_PATH
 from pytorch_lightning.callbacks.early_stopping import EarlyStopping
+from sklearn.metrics import classification_report, confusion_matrix, ConfusionMatrixDisplay
+
 
 # Note: Hydra is incompatible with @click
-@hydra.main(config_path= PROJECT_PATH / "configs",config_name="/config.yaml")
-
-#@click.command()
-#@click.argument('input_filepath_data', type=click.Path(exists=True))
-#@click.argument('output_filepath_model', type=click.Path(exists=True))
-#@click.argument('output_plot_model', type=click.Path())
+@hydra.main(config_path=PROJECT_PATH / "configs", config_name="/config.yaml")
 
 def main(cfg):
-#def main(cfg):
-    #logging
+    # def main(cfg):
+    # logging
     log = logging.getLogger(__name__)
 
     input_size = 784
@@ -68,70 +65,34 @@ def main(cfg):
     # training ###########################################
     model = MyAwesomeModel()
 
-
     early_stopping_callback = EarlyStopping(
         monitor="loss", patience=3, verbose=True, mode="min"
     )
     trainer = Trainer(callbacks=[early_stopping_callback])
 
-
     trainer.fit(model, train_loader, val_loader)
-    '''
-    criterion = nn.NLLLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
-    epochs = 13
-    steps = 0
-    running_loss = 0
-    running_losses = []
-    steps_list = []
+    preds, target = [],[]
 
-    print_every = 100
-    for e in range(epochs):
-        # Model in training mode, dropout is on
-        model.train()
-        for images, labels in trainloader:
-            steps += 1
+    for batch in train_loader:
+        x, y = batch
+        x = x.resize_(x.size()[0], 784)
+        probs = model(x)
+        preds.append(probs.argmax(dim=-1))
+        target.append(y.detach())
 
-            # Flatten images into a 784 long vector
-            images.resize_(images.size()[0], 784)
+    target = torch.cat(target, dim=0)
+    preds = torch.cat(preds, dim=0)
 
-            optimizer.zero_grad()
-
-            output = model.forward(images)
-            loss = criterion(output, labels)
-            loss.backward()
-            optimizer.step()
-
-            running_loss += loss.item()
-
-            if steps % print_every == 0:
-                model.eval()
-                # Model in inference mode, dropout is off
-
-                running_losses.append(running_loss / print_every)
-                mean_loss = running_loss / print_every
-                log.info('Epoch: {}/{} - Training loss: {:.2f}'.format(e, epochs, mean_loss))
-
-                steps_list.append(steps)
-
-                running_loss = 0
-
-    checkpoint = {'input_size': 784,
-                  'output_size': 10,
-                  'hidden_layers': [each.out_features for each in model.hidden_layers],
-                  'state_dict': model.state_dict()}
-
-    torch.save(checkpoint, output_filepath_model + "/checkpoint.pth")
+    report = classification_report(target, preds)
+    with open("classification_report.txt", 'w') as outfile:
+        outfile.write(report)
+    confmat = confusion_matrix(target, preds)
+    disp = ConfusionMatrixDisplay(confusion_matrix=confmat, )
+    disp.plot()
+    plt.savefig('confusion_matrix.png')
 
 
-    plt.plot(steps_list, running_losses)
-    plt.legend()
-    plt.title("Training losses")
-    plt.show()
-    plt.savefig(output_plot_model + '/training_plot.png')
-    plt.close()
-    '''
 
 if __name__ == '__main__':
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
@@ -145,4 +106,4 @@ if __name__ == '__main__':
     load_dotenv(find_dotenv())
 
     main()
-    
+
