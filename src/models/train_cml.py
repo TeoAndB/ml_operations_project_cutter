@@ -38,7 +38,7 @@ def main(cfg):
     output_plot_model = str(PROJECT_PATH / "reports" / "figures")
     '''
     hidden_layers = [512, 256, 128]
-    drop_p = 0.6
+    drop_p = 0.5
     batch_size = 64
     learning_rate = 0.003
     '''
