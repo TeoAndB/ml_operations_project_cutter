@@ -13,7 +13,7 @@ from model import MyAwesomeModel
 from torch import nn
 import matplotlib.pyplot as plt
 from torch.utils.data import TensorDataset, DataLoader
-from variable import PROJECT_PATH
+#from variable import PROJECT_PATH
 
 @click.command()
 @click.argument('input_filepath_model', type=click.Path(exists=True))
