@@ -22,6 +22,7 @@ from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 # Note: Hydra is incompatible with @click
 @hydra.main(config_path= PROJECT_PATH / "configs",config_name="/config.yaml")
 
+#
 #@click.command()
 #@click.argument('input_filepath_data', type=click.Path(exists=True))
 #@click.argument('output_filepath_model', type=click.Path(exists=True))
