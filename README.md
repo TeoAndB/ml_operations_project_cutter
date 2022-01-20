@@ -1,7 +1,7 @@
 ml_operations_project_cutter
 ==============================
 
-Project architecture with cookiecutter
+Project architecture with cookiecutter. Several features are implemented.
 
 Project Organization
 ------------
