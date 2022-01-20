@@ -60,13 +60,19 @@ Project Organization
 RUN THE PROJECT: 
 The Makefile was modified such that you can Run in the Terminal:
 
+```
 make data 
-# take the raw data files in data/raw process them into a single tensor, normalize the tensor and save this intermediate representation to the data/processed folder.
+```
 
+- take the raw data files in data/raw process them into a single tensor, normalize the tensor and save this intermediate representation to the data/processed folder.
+
+```
 make train
-# trains the model and saves the training curve to the reports/figures/. 
-# the model gets saved as checkpoint.pth in models
-
+```
+- trains the model and saves the training curve to the reports/figures/. 
+- the model gets saved as checkpoint.pth in models
+```
 make predict
-# makes predictions on the training set. Saves the prediction plots in reports/figures/prediction_plots
-# gives the overall accuracy of the model 
+```
+- makes predictions on the training set. Saves the prediction plots in reports/figures/prediction_plots
+- gives the overall accuracy of the model 
